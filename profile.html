@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherNow - Profile</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header/Navigation Bar -->
+    <header>
+        <div class="logo">WeatherNow</div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="forecast.html">5-Day Forecast</a>
+            <a href="historical.html">Historical Data</a>
+            <a href="recommender.html">Activity Recommender</a>
+        </nav>
+        <div id="welcomeMessage" style="display: none; font-size: 18px; font-weight: bold; color: white;"></div>
+        <div id="userSection">
+            <button onclick="showLoginModal()">Login</button>
+            <button onclick="showRegisterModal()">Register</button>
+            <div id="profileSection" style="display: none;">
+                <span id="loggedInUser"></span>
+                <button id="menuButton" onclick="toggleMenu()">☰</button>
+                <div id="dropdownMenu" style="display: none;">
+                    <div onclick="window.location.href='profile.html'">Profile</div>
+                    <div onclick="showFavCities()">Favorite Locations</div>
+                    <div onclick="showSettings()">Settings</div>
+                    <div onclick="logout()">Log Out</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Login</h2>
+            <input type="text" id="loginUsername" placeholder="Username" />
+            <input type="password" id="loginPassword" placeholder="Password" />
+            <button onclick="login()">Login</button>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <h2>Register</h2>
+            <input type="text" id="registerUsername" placeholder="Username" />
+            <input type="password" id="registerPassword" placeholder="Password" />
+            <button onclick="register()">Register</button>
+        </div>
+    </div>
+
+    <!-- Favorite Cities Modal -->
+    <div id="favCitiesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('favCitiesModal')">&times;</span>
+            <h2>Favorite Cities</h2>
+            <button onclick="toggleFavCityActions()">Add/Remove City</button>
+            <div id="favCityActions" style="display: none;">
+                <input type="text" id="favCityInput" placeholder="Enter city name" />
+                <button onclick="addFavCity()">Add</button>
+            </div>
+            <ul id="favCitiesList"></ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <h1>User Profile</h1>
+        
+        <div class="profile-container" id="profileContainer" style="display: none;">
+            <div class="profile-section">
+                <h2>Account Information</h2>
+                <p>Username: <span id="profileUsername"></span></p>
+                <p>Account created: <span id="accountCreated"></span></p>
+            </div>
+            
+            <div class="profile-section">
+                <h2>Preferences</h2>
+                <h3>Temperature Unit</h3>
+                <div id="unitToggle">
+                    <label class="unit-label">
+                        <input type="radio" name="temperatureUnit" value="Celsius" checked onchange="updatePreferences()"> Celsius
+                    </label>
+                    <label class="unit-label">
+                        <input type="radio" name="temperatureUnit" value="Fahrenheit" onchange="updatePreferences()"> Fahrenheit
+                    </label>
+                </div>
+                
+                <h3>Default Location</h3>
+                <p id="defaultLocationDisplay">No default location set</p>
+                <div class="search-container">
+                    <input type="text" id="defaultLocationInput" placeholder="Enter city name" />
+                    <div id="citySuggestions"></div>
+                    <button onclick="updateDefaultLocation()">Update</button>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <h2>Favorite Locations</h2>
+                <ul class="favorites-list" id="profileFavoritesList">
+                    <!-- Favorite locations will be listed here -->
+                </ul>
+                <div class="search-container">
+                    <input type="text" id="newFavoriteInput" placeholder="Enter city name" />
+                    <div id="favCitySuggestions"></div>
+                    <button onclick="addToFavorites()">Add</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="loginRequired" style="display: block;">
+            <h2>Login Required</h2>
+            <p>You need to be logged in to view your profile.</p>
+            <button onclick="showLoginModal()">Login</button>
+            <p>Don't have an account?</p>
+            <button onclick="showRegisterModal()">Register</button>
+        </div>
+    </main>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>

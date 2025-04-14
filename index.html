@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(self)">
+    <title>WeatherNow - Current Weather</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<!-- Header/Navigation Bar -->
+    <header>
+        <div class="logo">WeatherNow</div>
+        <nav>
+            <a href="index.html" id="homeNav">Home</a>
+            <a href="pages/forecast.html" id="forecastNav">5-Day Forecast</a>
+            <a href="pages/historical.html" id="historicalNav">Historical Data</a>
+            <a href="pages/recommender.html" id="recommenderNav">Activity Recommender</a>
+        </nav>
+        <div id="welcomeMessage"></div>
+        <div id="userSection">
+            <button onclick="showLoginModal()">Login</button>
+            <button onclick="showRegisterModal()">Register</button>
+            <div id="profileSection" style="display: none;">
+                <span id="loggedInUser"></span>
+                <button id="menuButton" onclick="toggleMenu()">☰</button>
+                <div id="dropdownMenu" style="display: none;">
+                    <div onclick="window.location.href='profile.html'">Profile</div>
+                    <div onclick="showFavCities()">Favorite Locations</div>
+                    <div onclick="showSettings()">Settings</div>
+                    <div onclick="logout()">Log Out</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Login Modal -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('loginModal')">&times;</span>
+        <h2>Login</h2>
+        <input type="text" id="loginUsername" placeholder="Username" />
+        <input type="password" id="loginPassword" placeholder="Password" />
+        <button onclick="login()">Login</button>
+    </div>
+</div>
+
+<!-- Register Modal -->
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('registerModal')">&times;</span>
+        <h2>Register</h2>
+        <input type="text" id="registerUsername" placeholder="Username" />
+        <input type="password" id="registerPassword" placeholder="Password" />
+        <button onclick="register()">Register</button>
+    </div>
+</div>
+    <!-- Favorite Cities Modal -->
+    <div id="favCitiesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('favCitiesModal')">&times;</span>
+            <h2>Favorite Cities</h2>
+            <button onclick="toggleFavCityActions()">Add/Remove City</button>
+            <div id="favCityActions" style="display: none;">
+                <input type="text" id="favCityInput" placeholder="Enter city name" />
+                <button onclick="addFavCity()">Add</button>
+            </div>
+            <ul id="favCitiesList"></ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="hero">
+            <h1><i class="fas fa-cloud-sun"></i> Know Your Weather!!</h1>
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <input type="text" id="cityInput" placeholder="Enter city name" />
+                    <div id="citySuggestions" class="suggestions-container"></div>
+                </div>
+                <button onclick="getWeather()"><i class="fas fa-search"></i> Search</button>
+                <button id="locationButton" onclick="getLocation()"><i class="fas fa-location-arrow"></i> My Location</button>
+            </div>
+        </div>
+
+            <!-- Gray line under search bar (Hidden for guests) -->
+        <div class="gray-line"></div>
+
+    <!-- Loading text (Hidden for guests) -->
+        <div id="loading">Loading...</div>
+
+
+        <div id="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+
+        <!-- Weather Display -->
+        <div id="weatherResult" class="weather-card">
+            <div class="weather-header">
+                <div>
+                    <h2 id="cityName"></h2>
+                </div>
+                <div class="weather-icon">
+                    <img id="weatherIcon" src="" alt="Weather Icon">
+                </div>
+            </div>
+
+            <div class="weather-main">
+                <div class="current-temp">
+                    <span id="temperature"></span><sup>°</sup><span id="temperatureUnit"></span>
+                </div>
+                <div class="feels-like" id="feelsLikeTemp">
+                    Feels like <span class="feels-like-value"></span>°
+                </div>
+                <p class="weather-desc" id="description"></p>
+            </div>
+
+            <div class="weather-details">
+                <div class="detail-item">
+                    <i class="fas fa-tint"></i>
+                    <span id="humidity"></span>%
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-wind"></i>
+                    <span id="windSpeed"></span> m/s
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-eye"></i>
+                    <span id="visibility"></span> m
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-sun"></i>
+                    <span id="sunrise"></span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-moon"></i>
+                    <span id="sunset"></span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-flag"></i>
+                    <span id="country"></span>
+                </div>
+            </div>
+        </div>
+
+    <!-- Hourly Forecast Section (Hidden for guests) -->
+    <div id="hourlyForecast" class="hourly-forecast-container">
+        <h3><i class="fas fa-clock"></i> Hourly Forecast</h3>
+        <div class="hourly-scroll">
+            <div id="hourlyForecastItems" class="hourly-items">
+                <!-- Hourly items will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+        <!-- Additional Weather Info -->
+        <div class="additional-info">
+            <div id="uvIndexResult" class="info-card">
+                <h3><i class="fas fa-sun"></i> UV Index</h3>
+                <div class="uv-level" id="uvIndexValue"></div>
+                <p id="uvIndexCategory"></p>
+                <p id="uvIndexTip"></p>
+            </div>
+
+            <div id="aqiResult" class="info-card">
+                <h3><i class="fas fa-smog"></i> Air Quality</h3>
+                <div class="aqi-level" id="aqiValue"></div>
+                <p id="aqiCategory"></p>
+                <p id="healthTip"></p>
+            </div>
+        </div>
+
+    <!-- Set Home Location Button (Hidden for guests) -->
+        <div id="setHomeLocationButton">
+            <button onclick="setDefaultLocation()"><i class="fas fa-home"></i> Set Home Location</button>
+        </div>
+
+        <aside id="localTime" class="time-display">
+            <div class="time-circle" id="currentTime"></div>
+            <div id="locationTime"></div>
+        </aside>
+
+        <!-- Weather Map Section -->
+        <div class="weather-map-container" id="weatherMapContainer">
+            <h3><i class="fas fa-map"></i> Weather Map</h3>
+            <div class="map-controls">
+                <button class="map-type active" data-layer="clouds">Clouds</button>
+                <button class="map-type" data-layer="precipitation">Precipitation</button>
+                <button class="map-type" data-layer="temp">Temperature</button>
+                <button class="map-type" data-layer="wind">Wind</button>
+            </div>
+            <div id="weatherMap">
+                <!-- Map iframe will be inserted here -->
+            </div>
+        </div>
+    </main>
+
+    <section id="registrationBenefits" class="benefits-section">
+        <h2><i class="fas fa-star"></i> Why Register?</h2>
+        <ul>
+            <li><i class="fas fa-heart"></i> Save favorite cities</li>
+            <li><i class="fas fa-map-marker-alt"></i> Set default home location</li>
+            <li><i class="fas fa-thermometer-half"></i> Custom temperature units</li>
+            <li><i class="fas fa-calendar-alt"></i> Hourly and 5-day forecasts</li>
+            <li><i class="fas fa-bell"></i> Weather alerts</li>
+            <li><i class="fas fa-lightbulb"></i> Activity recommendations</li>
+            <li><i class="fas fa-history"></i> Historical data</li>
+            <li>
+                <i class="fas fa-chart-line"></i>
+                <span>Weather aggregation</span>
+            </li>
+        </ul>
+        <button onclick="showRegisterModal()"><i class="fas fa-user-plus"></i> Register Now</button>
+    </section>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

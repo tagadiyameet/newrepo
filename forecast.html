@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherNow - 5-Day Forecast</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header/Navigation Bar -->
+    <header>
+        <div class="logo">WeatherNow</div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="forecast.html" class="active">5-Day Forecast</a>
+            <a href="historical.html">Historical Data</a>
+            <a href="recommender.html">Activity Recommender</a>
+        </nav>
+        <div id="welcomeMessage" style="display: none; font-size: 18px; font-weight: bold; color: white;"></div>
+        <div id="userSection">
+            <button onclick="showLoginModal()">Login</button>
+            <button onclick="showRegisterModal()">Register</button>
+            <div id="profileSection" style="display: none;">
+                <span id="loggedInUser"></span>
+                <button id="menuButton" onclick="toggleMenu()">☰</button>
+                <div id="dropdownMenu" style="display: none;">
+                    <div onclick="window.location.href='profile.html'">Profile</div>
+                    <div onclick="showFavCities()">Favorite Locations</div>
+                    <div onclick="showSettings()">Settings</div>
+                    <div onclick="logout()">Log Out</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Login</h2>
+            <input type="text" id="loginUsername" placeholder="Username" />
+            <input type="password" id="loginPassword" placeholder="Password" />
+            <button onclick="login()">Login</button>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <h2>Register</h2>
+            <input type="text" id="registerUsername" placeholder="Username" />
+            <input type="password" id="registerPassword" placeholder="Password" />
+            <button onclick="register()">Register</button>
+        </div>
+    </div>
+
+    <!-- Favorite Cities Modal -->
+    <div id="favCitiesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('favCitiesModal')">&times;</span>
+            <h2>Favorite Cities</h2>
+            <button onclick="toggleFavCityActions()">Add/Remove City</button>
+            <div id="favCityActions" style="display: none;">
+                <input type="text" id="favCityInput" placeholder="Enter city name" />
+                <button onclick="addFavCity()">Add</button>
+            </div>
+            <ul id="favCitiesList"></ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <h1>5-Day Weather Forecast</h1>
+        <div class="search-container">
+            <div class="search-wrapper">
+                <input type="text" id="cityInput" placeholder="Enter city name" />
+                <div id="citySuggestions" class="suggestions-container"></div>
+            </div>
+            <button onclick="getForecast()">Search</button>
+            <button id="locationButton" style="display: none;" onclick="getLocationForForecast()">Use My Location</button>
+        </div>
+
+        <div id="loading">Loading...</div>
+
+        <div id="forecastResult" style="margin-top: 20px; display: none;">
+            <h2 id="forecastCity">Forecast for <span id="cityName"></span></h2>
+            <div class="forecast-container" id="forecastContainer">
+                <!-- Forecast data will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Temperature Unit Toggle (Only for Registered Users) -->
+        <div id="unitToggle" style="margin-top: 20px; display: none;">
+            <label class="unit-label">
+                <input type="radio" name="temperatureUnit" value="Celsius" checked onchange="updatePreferences()"> Celsius
+            </label>
+            <label class="unit-label">
+                <input type="radio" name="temperatureUnit" value="Fahrenheit" onchange="updatePreferences()"> Fahrenheit
+            </label>
+        </div>
+    </main>
+
+    <section id="registrationBenefits" style="display: block;">
+        <h2>Why Register?</h2>
+        <ul>
+            <li>Save your favorite cities for quick access.</li>
+            <li>Set a default location to view weather automatically.</li>
+            <li>Customize temperature units (Celsius or Fahrenheit).</li>
+            <li>View 5-day weather forecasts and AQI (Air Quality Index).</li>
+            <li>Access exclusive weather tips and alerts.</li>
+            <li>Get personalized activity recommendations based on weather.</li>
+            <li>View historical weather data for any location.</li>
+        </ul>
+        <button onclick="showRegisterModal()">Register Now</button>
+    </section>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>
